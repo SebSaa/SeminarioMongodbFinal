@@ -4,17 +4,16 @@ La clase MongoDB
 https://www.php.net/manual/es/class.mongodb.php
 
 
+CRUD USUARIOS
+//Usuarios
+$r->addRoute('usuarios','GET','usuarioController','getUsuarios');
+$r->addRoute('usuarios/:dni','GET','usuarioController','getUsuario');
+$r->addRoute('usuarios','POST','usuarioController','saveUsuario');
+$r->addRoute('usuarios/:dni','PUT','usuarioController','updUsuario');
+$r->addRoute('usuarios/:dni','DELETE','usuarioController','delUsuario');
 
-CRUD PRODUCTO  
-//Productos
-$r->addRoute('getAll','GET','productoController','getProductos');  
-$r->addRoute('get/:criterio','GET','productoController','getProducto');  
-$r->addRoute('new','POST','productoController','saveProducto');  
-$r->addRoute('update/:id','PUT','productoController','updProducto');  
-$r->addRoute('delete/:id','DELETE','productoController','delProducto');  
-
-CRUD COBROS  
-//Cobranza  
-$r->addRoute('getAll','GET','cobroController','getCobros');  
-$r->addRoute('get/:criterio','GET','cobroController','getCobro');  
-$r->addRoute('new','POST','cobroController','saveCobro');  
+CRUD COBRANZA
+//Cobranza
+$r->addRoute('cobros','GET','cobroController','getCobros');
+$r->addRoute('cobros/:numero','GET','cobroController','getCobro');
+$r->addRoute('cobros','POST','cobroController','saveCobro');
