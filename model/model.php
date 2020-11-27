@@ -9,7 +9,6 @@ class Model {
     public function __construct(){
         $this->cliente = new MongoDB\Client("mongodb://localhost:27017");
         $this->coleccion = $this->cliente->dbClientes->usuarios;
-        
     }
     
   
