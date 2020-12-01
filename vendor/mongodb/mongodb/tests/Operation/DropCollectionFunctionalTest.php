@@ -2,13 +2,33 @@
 
 namespace MongoDB\Tests\Operation;
 
-use MongoDB\Driver\Server;
 use MongoDB\Operation\DropCollection;
 use MongoDB\Operation\InsertOne;
 use MongoDB\Operation\ListCollections;
+use MongoDB\Tests\CommandObserver;
+use function sprintf;
+use function version_compare;
 
 class DropCollectionFunctionalTest extends FunctionalTestCase
 {
+    public function testDefaultWriteConcernIsOmitted()
+    {
+        (new CommandObserver())->observe(
+            function () {
+                $operation = new DropCollection(
+                    $this->getDatabaseName(),
+                    $this->getCollectionName(),
+                    ['writeConcern' => $this->createDefaultWriteConcern()]
+                );
+
+                $operation->execute($this->getPrimaryServer());
+            },
+            function (array $event) {
+                $this->assertObjectNotHasAttribute('writeConcern', $event['started']->getCommand());
+            }
+        );
+    }
+
     public function testDropExistingCollection()
     {
         $server = $this->getPrimaryServer();
@@ -20,7 +40,7 @@ class DropCollectionFunctionalTest extends FunctionalTestCase
         $operation = new DropCollection($this->getDatabaseName(), $this->getCollectionName());
         $operation->execute($server);
 
-        $this->assertCollectionDoesNotExist($server, $this->getDatabaseName(), $this->getCollectionName());
+        $this->assertCollectionDoesNotExist($this->getCollectionName());
     }
 
     /**
@@ -28,26 +48,44 @@ class DropCollectionFunctionalTest extends FunctionalTestCase
      */
     public function testDropNonexistentCollection()
     {
-        $server = $this->getPrimaryServer();
-
-        $this->assertCollectionDoesNotExist($server, $this->getDatabaseName(), $this->getCollectionName());
+        $this->assertCollectionDoesNotExist($this->getCollectionName());
 
         $operation = new DropCollection($this->getDatabaseName(), $this->getCollectionName());
-        $operation->execute($server);
+        $operation->execute($this->getPrimaryServer());
+    }
+
+    public function testSessionOption()
+    {
+        if (version_compare($this->getServerVersion(), '3.6.0', '<')) {
+            $this->markTestSkipped('Sessions are not supported');
+        }
+
+        (new CommandObserver())->observe(
+            function () {
+                $operation = new DropCollection(
+                    $this->getDatabaseName(),
+                    $this->getCollectionName(),
+                    ['session' => $this->createSession()]
+                );
+
+                $operation->execute($this->getPrimaryServer());
+            },
+            function (array $event) {
+                $this->assertObjectHasAttribute('lsid', $event['started']->getCommand());
+            }
+        );
     }
 
     /**
      * Asserts that a collection with the given name does not exist on the
      * server.
      *
-     * @param Server $server
-     * @param string $databaseName
      * @param string $collectionName
      */
-    private function assertCollectionDoesNotExist(Server $server, $databaseName, $collectionName)
+    private function assertCollectionDoesNotExist($collectionName)
     {
-        $operation = new ListCollections($databaseName);
-        $collections = $operation->execute($server);
+        $operation = new ListCollections($this->getDatabaseName());
+        $collections = $operation->execute($this->getPrimaryServer());
 
         $foundCollection = null;
 
@@ -58,6 +96,6 @@ class DropCollectionFunctionalTest extends FunctionalTestCase
             }
         }
 
-        $this->assertNull($foundCollection, sprintf('Collection %s exists on the server', $collectionName));
+        $this->assertNull($foundCollection, sprintf('Collection %s exists', $collectionName));
     }
 }

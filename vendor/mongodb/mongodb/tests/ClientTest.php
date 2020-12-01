@@ -6,6 +6,7 @@ use MongoDB\Client;
 use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\WriteConcern;
+use MongoDB\Exception\InvalidArgumentException;
 
 /**
  * Unit tests for the Client class.
@@ -16,23 +17,23 @@ class ClientTest extends TestCase
     {
         $client = new Client();
 
-        $this->assertEquals('mongodb://localhost:27017', (string) $client);
+        $this->assertEquals('mongodb://127.0.0.1/', (string) $client);
     }
 
     /**
-     * @expectedException MongoDB\Exception\InvalidArgumentException
      * @dataProvider provideInvalidConstructorDriverOptions
      */
     public function testConstructorDriverOptionTypeChecks(array $driverOptions)
     {
-        new Client($this->getUri(), [], $driverOptions);
+        $this->expectException(InvalidArgumentException::class);
+        new Client(static::getUri(), [], $driverOptions);
     }
 
     public function provideInvalidConstructorDriverOptions()
     {
         $options = [];
 
-        foreach ($this->getInvalidArrayValues() as $value) {
+        foreach ($this->getInvalidArrayValues(true) as $value) {
             $options[][] = ['typeMap' => $value];
         }
 
@@ -41,15 +42,13 @@ class ClientTest extends TestCase
 
     public function testToString()
     {
-        $client = new Client($this->getUri());
+        $client = new Client(static::getUri());
 
-        $this->assertSame($this->getUri(), (string) $client);
+        $this->assertSame(static::getUri(), (string) $client);
     }
 
     public function testSelectCollectionInheritsOptions()
     {
-        $this->markTestSkipped('Depends on https://jira.mongodb.org/browse/PHPC-523');
-
         $uriOptions = [
             'readConcernLevel' => ReadConcern::LOCAL,
             'readPreference' => 'secondaryPreferred',
@@ -60,17 +59,17 @@ class ClientTest extends TestCase
             'typeMap' => ['root' => 'array'],
         ];
 
-        $client = new Client($this->getUri(), $uriOptions, $driverOptions);
+        $client = new Client(static::getUri(), $uriOptions, $driverOptions);
         $collection = $client->selectCollection($this->getDatabaseName(), $this->getCollectionName());
         $debug = $collection->__debugInfo();
 
-        $this->assertInstanceOf('MongoDB\Driver\ReadConcern', $debug['readConcern']);
+        $this->assertInstanceOf(ReadConcern::class, $debug['readConcern']);
         $this->assertSame(ReadConcern::LOCAL, $debug['readConcern']->getLevel());
-        $this->assertInstanceOf('MongoDB\Driver\ReadPreference', $debug['readPreference']);
+        $this->assertInstanceOf(ReadPreference::class, $debug['readPreference']);
         $this->assertSame(ReadPreference::RP_SECONDARY_PREFERRED, $debug['readPreference']->getMode());
-        $this->assertInternalType('array', $debug['typeMap']);
+        $this->assertIsArray($debug['typeMap']);
         $this->assertSame(['root' => 'array'], $debug['typeMap']);
-        $this->assertInstanceOf('MongoDB\Driver\WriteConcern', $debug['writeConcern']);
+        $this->assertInstanceOf(WriteConcern::class, $debug['writeConcern']);
         $this->assertSame(WriteConcern::MAJORITY, $debug['writeConcern']->getW());
     }
 
@@ -83,17 +82,17 @@ class ClientTest extends TestCase
             'writeConcern' => new WriteConcern(WriteConcern::MAJORITY),
         ];
 
-        $client = new Client($this->getUri());
+        $client = new Client(static::getUri());
         $collection = $client->selectCollection($this->getDatabaseName(), $this->getCollectionName(), $collectionOptions);
         $debug = $collection->__debugInfo();
 
-        $this->assertInstanceOf('MongoDB\Driver\ReadConcern', $debug['readConcern']);
+        $this->assertInstanceOf(ReadConcern::class, $debug['readConcern']);
         $this->assertSame(ReadConcern::LOCAL, $debug['readConcern']->getLevel());
-        $this->assertInstanceOf('MongoDB\Driver\ReadPreference', $debug['readPreference']);
+        $this->assertInstanceOf(ReadPreference::class, $debug['readPreference']);
         $this->assertSame(ReadPreference::RP_SECONDARY_PREFERRED, $debug['readPreference']->getMode());
-        $this->assertInternalType('array', $debug['typeMap']);
+        $this->assertIsArray($debug['typeMap']);
         $this->assertSame(['root' => 'array'], $debug['typeMap']);
-        $this->assertInstanceOf('MongoDB\Driver\WriteConcern', $debug['writeConcern']);
+        $this->assertInstanceOf(WriteConcern::class, $debug['writeConcern']);
         $this->assertSame(WriteConcern::MAJORITY, $debug['writeConcern']->getW());
     }
 
@@ -101,19 +100,17 @@ class ClientTest extends TestCase
     {
         $uriOptions = ['w' => WriteConcern::MAJORITY];
 
-        $client = new Client($this->getUri(), $uriOptions);
+        $client = new Client(static::getUri(), $uriOptions);
         $database = $client->{$this->getDatabaseName()};
         $debug = $database->__debugInfo();
 
         $this->assertSame($this->getDatabaseName(), $debug['databaseName']);
-        $this->assertInstanceOf('MongoDB\Driver\WriteConcern', $debug['writeConcern']);
+        $this->assertInstanceOf(WriteConcern::class, $debug['writeConcern']);
         $this->assertSame(WriteConcern::MAJORITY, $debug['writeConcern']->getW());
     }
 
     public function testSelectDatabaseInheritsOptions()
     {
-        $this->markTestSkipped('Depends on https://jira.mongodb.org/browse/PHPC-523');
-
         $uriOptions = [
             'readConcernLevel' => ReadConcern::LOCAL,
             'readPreference' => 'secondaryPreferred',
@@ -124,17 +121,17 @@ class ClientTest extends TestCase
             'typeMap' => ['root' => 'array'],
         ];
 
-        $client = new Client($this->getUri(), $uriOptions, $driverOptions);
+        $client = new Client(static::getUri(), $uriOptions, $driverOptions);
         $database = $client->selectDatabase($this->getDatabaseName());
         $debug = $database->__debugInfo();
 
-        $this->assertInstanceOf('MongoDB\Driver\ReadConcern', $debug['readConcern']);
+        $this->assertInstanceOf(ReadConcern::class, $debug['readConcern']);
         $this->assertSame(ReadConcern::LOCAL, $debug['readConcern']->getLevel());
-        $this->assertInstanceOf('MongoDB\Driver\ReadPreference', $debug['readPreference']);
+        $this->assertInstanceOf(ReadPreference::class, $debug['readPreference']);
         $this->assertSame(ReadPreference::RP_SECONDARY_PREFERRED, $debug['readPreference']->getMode());
-        $this->assertInternalType('array', $debug['typeMap']);
+        $this->assertIsArray($debug['typeMap']);
         $this->assertSame(['root' => 'array'], $debug['typeMap']);
-        $this->assertInstanceOf('MongoDB\Driver\WriteConcern', $debug['writeConcern']);
+        $this->assertInstanceOf(WriteConcern::class, $debug['writeConcern']);
         $this->assertSame(WriteConcern::MAJORITY, $debug['writeConcern']->getW());
     }
 
@@ -147,17 +144,17 @@ class ClientTest extends TestCase
             'writeConcern' => new WriteConcern(WriteConcern::MAJORITY),
         ];
 
-        $client = new Client($this->getUri());
+        $client = new Client(static::getUri());
         $database = $client->selectDatabase($this->getDatabaseName(), $databaseOptions);
         $debug = $database->__debugInfo();
 
-        $this->assertInstanceOf('MongoDB\Driver\ReadConcern', $debug['readConcern']);
+        $this->assertInstanceOf(ReadConcern::class, $debug['readConcern']);
         $this->assertSame(ReadConcern::LOCAL, $debug['readConcern']->getLevel());
-        $this->assertInstanceOf('MongoDB\Driver\ReadPreference', $debug['readPreference']);
+        $this->assertInstanceOf(ReadPreference::class, $debug['readPreference']);
         $this->assertSame(ReadPreference::RP_SECONDARY_PREFERRED, $debug['readPreference']->getMode());
-        $this->assertInternalType('array', $debug['typeMap']);
+        $this->assertIsArray($debug['typeMap']);
         $this->assertSame(['root' => 'array'], $debug['typeMap']);
-        $this->assertInstanceOf('MongoDB\Driver\WriteConcern', $debug['writeConcern']);
+        $this->assertInstanceOf(WriteConcern::class, $debug['writeConcern']);
         $this->assertSame(WriteConcern::MAJORITY, $debug['writeConcern']->getW());
     }
 }

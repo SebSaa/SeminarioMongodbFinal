@@ -2,28 +2,36 @@
     "packages": [
         {
             "name": "mongodb/mongodb",
-            "version": "1.0.0",
-            "version_normalized": "1.0.0.0",
+            "version": "1.5.2",
+            "version_normalized": "1.5.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mongodb/mongo-php-library.git",
-                "reference": "851a560864281cbf91fe182aefed85bfc3395031"
+                "reference": "9480f994de9f70e2ae5a946b21e6fc04bf5a6c3c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mongodb/mongo-php-library/zipball/851a560864281cbf91fe182aefed85bfc3395031",
-                "reference": "851a560864281cbf91fe182aefed85bfc3395031",
+                "url": "https://api.github.com/repos/mongodb/mongo-php-library/zipball/9480f994de9f70e2ae5a946b21e6fc04bf5a6c3c",
+                "reference": "9480f994de9f70e2ae5a946b21e6fc04bf5a6c3c",
                 "shasum": ""
             },
             "require": {
-                "ext-mongodb": "^1.1.0",
-                "php": ">=5.4"
+                "ext-hash": "*",
+                "ext-json": "*",
+                "ext-mongodb": "^1.6",
+                "php": "^5.6 || ^7.0"
             },
-            "time": "2016-01-21T19:43:25+00:00",
+            "require-dev": {
+                "phpunit/phpunit": "^5.7.27 || ^6.4 || ^8.3",
+                "sebastian/comparator": "^1.0 || ^2.0 || ^3.0",
+                "squizlabs/php_codesniffer": "^3.4",
+                "symfony/phpunit-bridge": "^4.4@dev"
+            },
+            "time": "2019-11-15T08:21:00+00:00",
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.0.x-dev"
+                    "dev-master": "1.5.x-dev"
                 }
             },
             "installation-source": "dist",
@@ -41,16 +49,16 @@
             ],
             "authors": [
                 {
+                    "name": "Andreas Braun",
+                    "email": "andreas.braun@mongodb.com"
+                },
+                {
                     "name": "Jeremy Mikola",
                     "email": "jmikola@gmail.com"
                 },
                 {
-                    "name": "Hannes Magnusson",
-                    "email": "bjori@mongodb.com"
-                },
-                {
-                    "name": "Derick Rethans",
-                    "email": "github@derickrethans.nl"
+                    "name": "Katherine Walker",
+                    "email": "katherine.walker@mongodb.com"
                 }
             ],
             "description": "MongoDB driver library",
@@ -63,7 +71,7 @@
             ],
             "support": {
                 "issues": "https://github.com/mongodb/mongo-php-library/issues",
-                "source": "https://github.com/mongodb/mongo-php-library/tree/master"
+                "source": "https://github.com/mongodb/mongo-php-library/tree/v1.5"
             },
             "install-path": "../mongodb/mongodb"
         }

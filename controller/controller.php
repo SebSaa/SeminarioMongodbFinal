@@ -7,7 +7,7 @@
         
         public function __construct() {
             
-            $this->model = new usuarioModel();
+            $this->usuario_model = new usuarioModel();
             $this->cobro_model = new cobroModel();
         }
 
