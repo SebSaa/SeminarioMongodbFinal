@@ -5,7 +5,7 @@ https://www.php.net/manual/es/class.mongodb.php
 Extras  
 https://blog.clicko.es/guia-uso-de-mongodb-con-php/  
 
-## Informe 
+## Observaciones 
 Realizando pruebas, en mi pc no funciona por error en el IDE en ObjectID, con lo cual manejamos el id como un objeto, desde otra pc funciona muy bien, por eso me decido hacerlo por dni, como indice, aunque no lo declare como tal.  
 Esta es la forma que use para trabajar con el id. 
 ```
