@@ -46,7 +46,7 @@ DELETE -> borra el usuario con dni pasado en la url, en caso de existir, caso co
 ```
 http://localhost/seminarioMongo/usuarios/24632250  
 ```
-CRUD COBROS
+CRUD COBROS  
 GET -> recibimos el listado completo de cobros
 ```
 http://localhost/seminarioMongo/cobros 
@@ -67,15 +67,15 @@ Mensaje recibido al automatizar los pagos
 ```
 su ultimo pago fue el mes 6 cargamos su nuevo pago del mes 7 id -> 5fc63b02a6470000370040e6
 ```
-ESTRUCTURA DEL ROUTE
-//Usuarios
-$r->addRoute('usuarios','GET','usuarioController','getUsuarios');
-$r->addRoute('usuarios/:dni','GET','usuarioController','getUsuario');
-$r->addRoute('usuarios','POST','usuarioController','saveUsuario');
-$r->addRoute('usuarios','PUT','usuarioController','updUsuario');
-$r->addRoute('usuarios/:dni','DELETE','usuarioController','delUsuario');
+ESTRUCTURA DEL ROUTE  
+//Usuarios  
+$r->addRoute('usuarios','GET','usuarioController','getUsuarios');  
+$r->addRoute('usuarios/:dni','GET','usuarioController','getUsuario');  
+$r->addRoute('usuarios','POST','usuarioController','saveUsuario');  
+$r->addRoute('usuarios','PUT','usuarioController','updUsuario');  
+$r->addRoute('usuarios/:dni','DELETE','usuarioController','delUsuario');  
 
-//Cobranza
-$r->addRoute('cobros','GET','cobroController','getCobros');
-$r->addRoute('cobros/:dni','GET','cobroController','getCobro');
-$r->addRoute('cobros','POST','cobroController','saveCobro');  
+//Cobranza  
+$r->addRoute('cobros','GET','cobroController','getCobros');  
+$r->addRoute('cobros/:dni','GET','cobroController','getCobro');  
+$r->addRoute('cobros','POST','cobroController','saveCobro');    
