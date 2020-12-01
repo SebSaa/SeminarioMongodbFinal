@@ -5,6 +5,9 @@ https://www.php.net/manual/es/class.mongodb.php
 Extras  
 https://blog.clicko.es/guia-uso-de-mongodb-con-php/  
 
+## Configuracion ambiente 
+Clonar el proyecto, estar corriendo xampp, modulo Apache, tener instalado y corriendo mongo, y a travez de Postman o cualquier programa que valide las API,  utilizar la documentacion abajo detallada.
+
 ## Observaciones 
 Realizando pruebas, en mi pc no funciona por error en el IDE en ObjectID, con lo cual manejamos el id como un objeto, desde otra pc funciona muy bien, por eso me decido hacerlo por dni, como indice, aunque no lo declare como tal.  
 Esta es la forma que use para trabajar con el id. 
